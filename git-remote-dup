@@ -41,8 +41,8 @@ done
 [ $# -gt 0 ] || usage 1
 
 origin=$(git remote get-url origin)
-ssh="git@([^:]+):(.+)\.git"
-https="https://([^/]+)/(.+)\.git"
+ssh="git@([^:]+):(.+)"
+https="https://([^/]+)/(.+)"
 
 if [[ $origin =~ $ssh ]]; then
     host=${BASH_REMATCH[1]}
