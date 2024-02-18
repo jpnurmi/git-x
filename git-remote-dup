@@ -53,18 +53,21 @@ elif [[ $origin =~ $https ]]; then
     path=${BASH_REMATCH[2]}
     [ $proto = auto ] && proto=https
 fi
-
-case "$proto" in
-    ssh)
-        url="git@$host:$path"
-        ;;
-    https)
-        url="https://$host/$path"
-        ;;
-esac
+name=$(echo "$path" | cut -d/ -f2)
 
 while [ $# -gt 0 ]; do
     remote="$1"
+    path="$remote/$name"
+
+    case "$proto" in
+        ssh)
+            url="git@$host:$path"
+            ;;
+        https)
+            url="https://$host/$path"
+            ;;
+    esac
+
     if ! git remote | grep "$remote" > /dev/null; then
         git remote add "$remote" "$url"
     else
