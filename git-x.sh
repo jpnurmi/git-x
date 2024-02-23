@@ -9,3 +9,11 @@ _complete_git_remote_dup() {
     COMPREPLY=($(compgen -W "$opts $remotes" -- $cur))
 }
 complete -F _complete_git_remote_dup git-remote-dup
+
+_complete_git_remote_tidy() {
+    local cur=${COMP_WORDS[COMP_CWORD]}
+    local remotes="$(git remote)"
+    local opts="-h --help --no-branches --no-tags"
+    COMPREPLY=($(compgen -W "$opts $remotes" -- $cur))
+}
+complete -F _complete_git_remote_tidy git-remote-tidy

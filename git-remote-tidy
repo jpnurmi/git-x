@@ -1,0 +1,59 @@
+#!/bin/sh
+
+usage() {
+    echo "Usage: $(basename $0) [options] <remote> <refs...>"
+    echo ""
+    echo "Options:"
+    echo "-h,--help"
+    echo "--no-branches"
+    echo "--no-tags"
+    exit $1
+}
+
+opts=$(getopt --options "h" --longoptions "help,no-branches,no-tags" --name "$(basename $0)" -- "$@") || usage 1
+eval set -- "$opts"
+
+set -e
+
+branches=true
+tags=true
+
+while true; do
+    case "$1" in
+        -h|--help)
+            usage 0
+            ;;
+        --no-branches)
+            branches=false
+            shift
+            ;;
+        --no-tags)
+            tags=false
+            shift
+            ;;
+        --)
+            shift
+            break
+            ;;
+    esac
+done
+
+[ $# -lt 2 ] && usage 1
+
+remote=$1
+shift
+
+for ref in "$@"; do
+    refs=()
+    if $branches; then
+        refs+=($(git branch -r | grep -E "$remote/$ref" | cut -d/ -f2))
+    fi
+    if $tags; then
+        refs+=($(git ls-remote --tags "$remote" | grep -E "$ref" | grep -v '\^{}' | awk '{print $2}' | sed 's/refs\/tags\///'))
+    fi
+    if [ ${#refs[@]} -eq 0 ]; then
+        echo "No refs match $ref"
+    else
+        git push $remote --delete "${refs[@]}"
+    fi
+done

@@ -10,8 +10,7 @@ usage() {
     exit $1
 }
 
-opts=$(getopt --options "hv" --longoptions "help,https,ssh" --name "$(basename $0)" -- "$@")
-[ $? -eq 0 ] || usage 1
+opts=$(getopt --options "hv" --longoptions "help,https,ssh" --name "$(basename $0)" -- "$@") || usage 1
 eval set -- "$opts"
 
 set -e
@@ -21,7 +20,7 @@ proto=auto
 while true; do
     case "$1" in
         -h|--help)
-            usage
+            usage 0
             ;;
         --https)
             proto=https
