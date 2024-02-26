@@ -46,10 +46,20 @@ shift
 for ref in "$@"; do
     refs=()
     if $branches; then
-        refs+=($(git branch -r | grep -E "$remote/$ref" | cut -d/ -f2))
+        branches+=($(git branch -r | grep -E "$remote/" | cut -d/ -f2))
+        for branch in "${branches[@]}"; do
+            if [[ $branch == $ref ]]; then
+                refs+=($branch)
+            fi
+        done
     fi
     if $tags; then
-        refs+=($(git ls-remote --tags "$remote" | grep -E "$ref" | grep -v '\^{}' | awk '{print $2}' | sed 's/refs\/tags\///'))
+        tags=($(git ls-remote --tags "$remote" | grep -v '\^{}' | awk '{print $2}' | sed 's/refs\/tags\///'))
+        for tag in "${tags[@]}"; do
+            if [[ $tag == $ref ]]; then
+                refs+=($tag)
+            fi
+        done
     fi
     if [ ${#refs[@]} -eq 0 ]; then
         echo "No refs match $ref"
