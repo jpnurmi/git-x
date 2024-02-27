@@ -1,7 +1,7 @@
 #!/bin/sh
 
 usage() {
-    echo "Usage: $(basename $0) [options] <remotes>"
+    echo "Usage: $(basename $0) [options] <origin> <remotes>"
     echo ""
     echo "Options:"
     echo "-h,--help"
@@ -37,9 +37,9 @@ while true; do
     esac
 done
 
-[ $# -gt 0 ] || usage 1
+[ $# -gt 1 ] || usage 1
 
-origin=$(git remote get-url origin)
+origin=$(git remote get-url $1)
 ssh="git@([^:]+):(.+)"
 https="https://([^/]+)/(.+)"
 
@@ -54,6 +54,7 @@ elif [[ $origin =~ $https ]]; then
 fi
 name=$(echo "$path" | cut -d/ -f2)
 
+shift
 while [ $# -gt 0 ]; do
     remote="$1"
     path="$remote/$name"

@@ -32,7 +32,7 @@ foo	git@github.com:foo/git-x.git (push)
 origin	git@github.com:jpnurmi/git-x.git (fetch)
 origin	git@github.com:jpnurmi/git-x.git (push)
 
-$ git-remote-dup --https bar
+$ git-remote-dup --https origin bar
 bar	https://github.com/bar/git-x.git (fetch)
 bar	https://github.com/bar/git-x.git (push)
 foo	git@github.com:foo/git-x.git (fetch)
