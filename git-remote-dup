@@ -5,22 +5,28 @@ usage() {
     echo ""
     echo "Options:"
     echo "-h,--help"
+    echo "--fetch"
     echo "--https"
     echo "--ssh"
     exit $1
 }
 
-opts=$(getopt --options "hv" --longoptions "help,https,ssh" --name "$(basename $0)" -- "$@") || usage 1
+opts=$(getopt --options "hv" --longoptions "help,fetch,https,ssh" --name "$(basename $0)" -- "$@") || usage 1
 eval set -- "$opts"
 
 set -e
 
+fetch=false
 proto=auto
 
 while true; do
     case "$1" in
         -h|--help)
             usage 0
+            ;;
+        --fetch)
+            fetch=true
+            shift
             ;;
         --https)
             proto=https
@@ -55,8 +61,8 @@ fi
 name=$(echo "$path" | cut -d/ -f2)
 
 shift
-while [ $# -gt 0 ]; do
-    remote="$1"
+remotes=("${@:1}")
+for remote in "${remotes[@]}"; do
     path="$remote/$name"
 
     case "$proto" in
@@ -77,3 +83,7 @@ while [ $# -gt 0 ]; do
 done
 
 git remote -v
+
+if [ "$fetch" = "true" ]; then
+    git fetch --multiple "${remotes[@]}"
+fi
