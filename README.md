@@ -14,14 +14,14 @@ $ echo 'source ~/.git-x/git-x.sh' >> ~/.bashrc
 ### `git-remote-dup`
 
 Duplicates a Git remote. Commonly used remote names can be specified via the
-`GIT_REMOTE_DUP` environment variable.
+`x.remotes` Git config variable.
 
 ```sh
 $ git remote -v
 origin	git@github.com:jpnurmi/git-x.git (fetch)
 origin	git@github.com:jpnurmi/git-x.git (push)
 
-$ export GIT_REMOTE_DUP="foo bar"
+$ git config --global x.remotes "foo bar"
 
 $ git remote-dup origin <TAB><TAB>
 bar      foo      -h       --help   --https  --ssh

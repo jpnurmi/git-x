@@ -6,7 +6,7 @@ _complete_git_remote_dup() {
     local cur=${COMP_WORDS[COMP_CWORD]}
     local opts="-h --help --fetch --https --ssh"
     local remotes="$(git remote)"
-    local dup="$GIT_REMOTE_DUP"
+    local dup="$(git config x.remotes)"
     COMPREPLY=($(compgen -W "$opts $remotes $dup" -- $cur))
 }
 complete -F _complete_git_remote_dup git-remote-dup
